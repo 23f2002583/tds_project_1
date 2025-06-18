@@ -1,0 +1,63 @@
+description: "TDS Virtual TA Project - Simplified Evaluation (No images)"
+
+providers:
+  - id: https
+    config:
+      url: https://1eaa-152-59-63-159.ngrok-free.app/ask  # Replace with your actual URL
+      method: POST
+      headers:
+        Content-Type: application/json
+      body:
+        question: "{{ question }}"
+      transformResponse: json
+
+defaultTest:
+  assert:
+    - type: is-json
+      value:
+        type: object
+        required: [answer, links]
+        properties:
+          answer: { type: string }
+          links:
+            type: array
+            items:
+              type: object
+              required: [url, text]
+              properties:
+                url: { type: string }
+                text: { type: string }
+
+tests:
+  - vars:
+      question: What is the deadline to submit GA6 for the Jan 2025 TDS course?
+    assert:
+      - type: llm-rubric
+        transform: output.answer
+        value: Mentions the GA6 deadline clearly
+
+  - vars:
+      question: What is the role of pandas in data analysis?
+    assert:
+      - type: llm-rubric
+        transform: output.answer
+        value: Explains pandas functions like data manipulation or DataFrames
+
+  - vars:
+      question: Is GA3 a group assignment or an individual one?
+    assert:
+      - type: llm-rubric
+        transform: output.answer
+        value: Clarifies GA3 is individual
+
+  - vars:
+      question: What should I do if I missed submitting GA1 on time?
+    assert:
+      - type: llm-rubric
+        transform: output.answer
+        value: Advises based on course policy (late penalty or no resubmission)
+
+writeLatestResults: true
+
+commandLineOptions:
+  cache: true

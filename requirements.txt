@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pydantic
+sentence-transformers==2.2.2
+scikit-learn
+numpy
+requests
+python-multipart
+huggingface_hub==0.16.4
